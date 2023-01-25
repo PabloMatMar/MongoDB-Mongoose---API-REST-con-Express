@@ -4,11 +4,16 @@ require('./utils/db_mongo')
 const error404 = require('./middlewares/error404')
 
 // Módulos de Rutas
-const productsRoutes = require('./routes/productsRoutes')
+const productsRoutes = require('./routes/productsRoutes');
+const providersRoutes = require('./routes/providersRoutes');
 
 
 const app = express()
 const port = 3000
+
+// Template engine
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 
 
@@ -16,11 +21,13 @@ const port = 3000
 app.use(express.json()); // Habilitar tipo de dato a recibir
 app.use(express.urlencoded({ extended: true }));
 
+//Rutas
+app.use('/providers', providersRoutes);
+app.use('/products', productsRoutes);
+
 
 app.get('/', (req, res) => {
-    const calc = calculator.add(2, 2);
-    //res.send(`Hello World! La suma es ${suma}`)
-    res.render('content', { msj: "The Bridge", calc })
+    res.json({msg: "hola"})
 })
 
 //Rutas 

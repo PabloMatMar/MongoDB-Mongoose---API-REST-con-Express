@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
-require('../utils/db_mongo')//conectarse a la BBDD
+// require('../utils/db_mongo')//conectarse a la BBDD
 
 const objectSchema = {
-    id: { 
-        type: Number, 
-        required: true,
-        unique: true
-    },
+    
     title: { 
         type: String, 
         required: true,
@@ -20,35 +16,89 @@ const objectSchema = {
         type: String, 
         required: true 
     },
-    image:{
-        type: String,
-        validate: {
-            validator: function(url){
-                if(url.indexOf('.jpg') != -1 || url.indexOf('.png') != -1)
-                    return true;
-                else {
-                    return false;
-                }
-            }, 
-            message: "Porfa, sólo imágenes JPG o PNG"
-        }
+    providers: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Providers'
     }
 };
 // Crear el esquema
 const productSchema = mongoose.Schema(objectSchema);
 // Crear el modelo --> Colección
-const Product = mongoose.model('Product', productSchema);
+const Products = mongoose.model('Products', productSchema);
 
-module.exports = Product;
+module.exports = Products;
+
+
+
+// validate: {
+//     validator: function(url){
+//         if(url.indexOf('.jpg') != -1 || url.indexOf('.png') != -1)
+//             return true;
+//         else {
+//             return false;
+//         }
 
 
 // Insertar un producto
 // const p = new Product({
-//     id: 9,
 //     title: "Tortilla",
 //     price: 1.80,
 //     description: "Tortilla jugosa del teatro",
-//     image:"https://www.recetasderechupete.com/wp-content/uploads/2020/11/Tortilla-de-patatas-4-768x530.png"
+//     providers: "63d1659d77e8d2811573eafd"
 // });
 
 // p.save().then((data)=>console.log(data));
+
+
+// const mongoose = require('mongoose');
+
+// // mongoose.connect('mongodb://127.0.0.1:27017/fakeshop')
+// //     .then(() => console.log('Now connected to MongoDB!'))
+// //     .catch(err => console.error('Something went wrong', err));
+
+// const providers = mongoose.model('Publisher', new mongoose.Schema({
+//     companyName: String,
+//     CIF: String,
+//     address: String,
+//     website: String
+// }));
+
+// const products = mongoose.model('Game', new mongoose.Schema({
+//     title: String,
+//     price: Number,
+//     description: String
+
+// }));
+
+// async function createProvider(companyName, CIF, address, website) {
+//     const provider = new Publisher({
+//         companyName,
+//         CIF,
+//         address,
+//         website
+//     });
+
+//     const result = await provider.save();
+//     console.log(result);
+// }
+
+// async function createProduct(title, price, description, publisher) {
+//     const product = new Game({
+//         title,
+//         price,
+//         description,
+//         publisher
+//     });
+
+//     const result = await product.save();
+//     console.log(result);
+// }
+
+// async function listProducts() {
+//     const products = await products
+//         .find()
+//         .select('title');
+//     console.log(products);
+// }
+
+// createPublisher('Nintendo', true, 'https://www.nintendo.com/');

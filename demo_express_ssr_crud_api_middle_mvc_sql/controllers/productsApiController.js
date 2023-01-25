@@ -1,53 +1,46 @@
 // Controlador - Lógica de negocio de la app
 
 const Product = require('../models/products');
+const mongoose = require('mongoose');
+
 
 const getProducts = async (req,res) => {
-    const getProducts = async (req,res) => {
-        if (req.params.id) { // con ID
-            try {
-                let product = await Product.find({id:req.params.id},'- _id - _v');
-                if (product.length>0) {
-                    res.status(200).json(product[0]); // Respuesta de la API para 1 producto
-                }
-                else {
-                    res.status(404).json({msj:"producto no encontrado con ID "+req.params.id}); // Respuesta de la API para 1 producto
-                }    
-            }
-            catch(err){
-                res.status(400).json({msj: err.message});
-            }
-        } else { // sin ID --> TODOS los products
-            try {
-                let products = await Product.find({}, {"_id" : 0,"__v":0}); // []
+
+    try {
+                let products = await Product.find({Product},{_id:0,__v:0})//.populate('providers', '- id_ - __v')
                 res.status(200).json(products); // Respuesta de la API para muchos productos
-            }
-            catch(err){
-                res.status(400).json({msj: err.message});
-            }
         }
-    }
-}
+        catch(err){
+                res.status(400).json({msj: err.message});
+        }
+ }
+
+
 
 const createProduct = async (req,res) => {
-    console.log("Esto es el console.log de lo que introducimos por postman", req.body); // Objeto recibido de producto nuevo
-    const newProduct = req.body; // {} nuevo producto a guardar
+    // console.log("Esto es el console.log de lo que introducimos por postman", req.body.provider);
+    let id = mongoose.Types.ObjectId(req.body.provider);
+    const newProduct = req.body;
+    newProduct.provider = id;
+    console.log("Esto es el objeto que posteamos:", req.body);
 
     // Líneas
     // para guardar 
     // en una BBDD SQL o MongoDB
 //para guardar en una bbdd mongoDB
   try{
+
     let response = await new Product(newProduct);
-    let answer = await response.save(); 
+    let answer = await response.save();
     // objeto de vuelta de guardar en la bbdd
     console.log("Este es el console.log de lo que devuelve la api", answer);
 
     res.status(201).json({
-        msj: `Producto ${answer.title} guardado en el sistema con ID: ${answer.id}`,
+        msj: `Producto ${answer.title} guardado en el sistema.`,
         "product": answer
-    });}catch(error) {
-        ('Este es el error que devuelve la api', err.message);
+    });}catch(err) {
+        ('Este es el error que devuelve la api' + err);
+
         res.status(400).json({msj: err.message})
     }
 }
