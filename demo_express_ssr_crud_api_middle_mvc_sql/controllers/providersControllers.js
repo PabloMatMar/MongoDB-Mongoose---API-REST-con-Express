@@ -52,16 +52,13 @@ const createProviders = async (req, res) => {
 
 const deleteProviders = async (req, res) => {
     const { company_name } = req.body
-    console.log(company_name)
     const providerExist = await providers.find({ company_name: company_name })
-    console.log(providerExist[0])
     const providerEraser = await providers.findOne({ company_name: company_name }).exec()
-    console.log(providerEraser)
 
     if (providerExist[0].company_name === providerEraser.company_name) {
+        //EL METODO REMOVE ELIMINA TODOS LOS PRODUCTOS QUE CONTENGAN EL PARAMETRO QUE LE PASAS
         console.log(providerExist[0]._id)
         let productsOfCompany = await products.remove({ _id: providerExist[0]._id });
-        // console.log("******************************************************",productsOfCompany)
         let response = await providers.deleteOne(providerEraser);
         console.log("Este es el console.log de lo que se va a eliminar de la api", response);
         res.status(204).json({
