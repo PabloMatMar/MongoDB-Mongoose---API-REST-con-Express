@@ -1,36 +1,39 @@
 // Controlador - Lógica de negocio de la app
-
-const Product = require('../models/products');
+const products = require('../models/products');
 const mongoose = require('mongoose');
+const Providers = require('../models/providers');
+// const Products = require('../models/products');
 
 
 const getProducts = async (req,res) => {
 
     try {
-                let products = await Product.find({Product},{_id:0,__v:0})//.populate('providers', '- id_ - __v')
-                res.status(200).json(products); // Respuesta de la API para muchos productos
+                let product = await products.find({products},{_id:0,__v:0})//.populate('providers', '- id_ - __v')
+                res.status(200).json(product); // Respuesta de la API para muchos productos
         }
         catch(err){
                 res.status(400).json({msj: err.message});
         }
- }
+}
 
 
+//objeto para crear producto
+// {
+//     "title": "dsdsdsadslsojdddsdsdsd",
+//     "price": 100,
+//     "description": "djskjdjliasjdaj",
+//     "provider": "Equipamiento Deportivo S.L"
+//   }
 
 const createProduct = async (req,res) => {
-    // console.log("Esto es el console.log de lo que introducimos por postman", req.body.provider);
-    let id = mongoose.Types.ObjectId(req.body.provider);
-    const newProduct = req.body;
-    newProduct.provider = id;
-    console.log("Esto es el objeto que posteamos:", req.body);
-
-    // Líneas
-    // para guardar 
-    // en una BBDD SQL o MongoDB
-//para guardar en una bbdd mongoDB
+    const company_name_id = await Providers.findOne({company_name: req.body.provider}, '_id' ).exec()
+    // const company_name_id
+    const newProduct = req.body
+    newProduct.provider = company_name_id
+    console.log(newProduct)
   try{
 
-    let response = await new Product(newProduct);
+    let response = await new products(newProduct);
     let answer = await response.save();
     // objeto de vuelta de guardar en la bbdd
     console.log("Este es el console.log de lo que devuelve la api", answer);
@@ -46,9 +49,23 @@ const createProduct = async (req,res) => {
 }
 
 const deleteProduct = async (req,res)=>{
-    const msj ="Has enviado un DELETE para borrar product";
-    console.log(msj);
-    res.json({"message":msj});
+    const {title} = req.body
+    const productExist = await products.find({title: title})
+    const productEraser = await products.findOne({title: title}).exec()
+
+
+
+        if(productExist === productEraser) {
+            let response = await products.deleteOne(productEraser); 
+            console.log("Este es el console.log de lo que se va a eliminar de la api", response);
+            res.status(201).json({
+                msj: `Producto ${title} eliminado del sistema.`,
+                "product": productEraser     });
+            
+        } else {
+            res.status(201).json({msj: `Producto ${productEraser} no encontrado en el sistema.`})
+        }
+
 }
 module.exports = {
     getProducts,

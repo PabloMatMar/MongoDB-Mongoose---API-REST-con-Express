@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// require('../utils/db_mongo')//conectarse a la BBDD
+require('../utils/db_mongo')//conectarse a la BBDD
 
 const objectSchema = {
     
@@ -16,7 +16,7 @@ const objectSchema = {
         type: String, 
         required: true 
     },
-    providers: {
+        providers: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Providers'
     }
@@ -39,66 +39,47 @@ module.exports = Products;
 //         }
 
 
-// Insertar un producto
-// const p = new Product({
-//     title: "Tortilla",
-//     price: 1.80,
-//     description: "Tortilla jugosa del teatro",
-//     providers: "63d1659d77e8d2811573eafd"
+// // Insertar un producto
+// const p = new Products({
+//     id: 5,
+//     title: "Camisa de las caras",
+//     price: 200,
+//     description: "No hay quien la planche bien",
+//     Providers: "Ropa de caballero S. L"
 // });
 
 // p.save().then((data)=>console.log(data));
 
 
-// const mongoose = require('mongoose');
 
-// // mongoose.connect('mongodb://127.0.0.1:27017/fakeshop')
-// //     .then(() => console.log('Now connected to MongoDB!'))
-// //     .catch(err => console.error('Something went wrong', err));
 
-// const providers = mongoose.model('Publisher', new mongoose.Schema({
-//     companyName: String,
-//     CIF: String,
-//     address: String,
-//     website: String
-// }));
 
-// const products = mongoose.model('Game', new mongoose.Schema({
-//     title: String,
-//     price: Number,
-//     description: String
+// const products = require('./providersSchema')
 
-// }));
 
-// async function createProvider(companyName, CIF, address, website) {
-//     const provider = new Publisher({
-//         companyName,
-//         CIF,
-//         address,
-//         website
-//     });
-
-//     const result = await provider.save();
-//     console.log(result);
-// }
-
-// async function createProduct(title, price, description, publisher) {
-//     const product = new Game({
+// const createProduct = async (title, price, description, provider) => {
+//     const product = new products({
 //         title,
 //         price,
 //         description,
-//         publisher
+//         provider
 //     });
 
 //     const result = await product.save();
-//     console.log(result);
+//     return result;
 // }
 
-// async function listProducts() {
-//     const products = await products
-//         .find()
-//         .select('title');
-//     console.log(products);
+// const listProducts = async () => {
+//     const allProduct = await products.find({})
+//     return allProduct
+
 // }
 
-// createPublisher('Nintendo', true, 'https://www.nintendo.com/');
+// const productsModel = {
+//     createProduct,
+//     listProducts
+// }
+
+// module.exports = productsModel
+
+// createProvider('Nintendo', true, 'https://www.nintendo.com/');
