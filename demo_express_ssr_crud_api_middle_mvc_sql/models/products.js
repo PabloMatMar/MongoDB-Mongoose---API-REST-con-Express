@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const provider = require('./provider')
 require('../utils/db_mongo')//conectarse a la BBDD
 
 const objectSchema = {
@@ -16,9 +17,9 @@ const objectSchema = {
         type: String, 
         required: true 
     },
-        providers: {
+        provider: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Providers'
+        ref: 'Provider'
     }
 };
 // Crear el esquema

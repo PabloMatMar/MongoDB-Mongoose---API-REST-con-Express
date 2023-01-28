@@ -1,7 +1,7 @@
 // Controlador - Lógica de negocio de la app
 const products = require('../models/products');
 const mongoose = require('mongoose');
-const Providers = require('../models/providers');
+const Provider = require('../models/provider');
 // const Products = require('../models/products');
 
 
@@ -18,17 +18,18 @@ const getProducts = async (req,res) => {
 
 //OBJETO PARA PROBAR EL POST PRODUCTS
 // {
-//     "title": "dsdsdsadslsojdddsdsdsd",
-//     "price": 100,
-//     "description": "djskjdjliasjdaj",
+//     "title": "Banco de pesas",
+//     "price": 150,
+//     "description": "Para poder realizar mayor variabilidad de ejercicios",
 //     "provider": "Equipamiento Deportivo S.L"
 //   }
 
 const createProduct = async (req,res) => {
-const company_name_id = await Providers.findOne({company_name: req.body.provider}, '_id' ).exec()
+const company_id = await Provider.findOne({company_name: req.body.provider}, '_id' )
+console.log(company_id)
 // const company_name_id
   const newProduct = req.body
-  newProduct.provider = company_name_id
+  newProduct.provider = company_id
   console.log(newProduct)
   try{
 
@@ -48,7 +49,7 @@ const company_name_id = await Providers.findOne({company_name: req.body.provider
 }
 //OBJETO PARA PROBAR EL DELETE PRODUCTS
 // {
-//     "title":"fedscdssdddsdsassdsdadsdsassssdsasadsadfdfdsds"
+//     "title":"Tubos de escape"
 //   }
 
 
@@ -75,8 +76,7 @@ const deleteProduct = async (req,res)=>{
 
 //OBJETO PARA PROBAR EL PUT PRODUCTS
 // {
-  
-//     "title": "dsddddsddsdddsdsadsadsadsdsadasdsssdsdsd",
+//     "title": "Piruletas",
 //     "price": 32340,
 //     "description": "producto actualizado"
 //     }
@@ -88,7 +88,7 @@ const updateProducts = async (req, res) => {
 
     try {
         const productUpdate = await products.findOneAndUpdate({ title: title }, { price: price, description: description})
-        res.status(201).json({
+        res.status(200).json({
             msj: `EL producto ${title} ha sido actualizado.`,
         })
 
