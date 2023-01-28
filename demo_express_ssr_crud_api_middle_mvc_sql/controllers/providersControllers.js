@@ -1,11 +1,11 @@
 // Controlador - Lógica de negocio de la app
-const providers = require('../models/providers');
+const provider = require('../models/provider');
 const products = require('../models/products')
 const mongoose = require('mongoose');
 
 const getProviders = async (req, res) => {
     try {
-        let allProviders = await providers.find({ providers }, { _id: 0, __v: 0 }); // []
+        let allProviders = await provider.find({ provider }, { _id: 0, __v: 0 }); // []
         res.status(200).json(allProviders); // Respuesta de la API para muchos productos
     }
     catch (err) {
@@ -30,7 +30,7 @@ const createProviders = async (req, res) => {
     // en una BBDD SQL o MongoDB
     //para guardar en una bbdd mongoDB
     try {
-        let response = await new providers(newProviders);
+        let response = await new provider(newProviders);
         let answer = await response.save();
         // objeto de vuelta de guardar en la bbdd
         console.log("Este es el console.log de lo que devuelve la api", answer);
@@ -47,19 +47,27 @@ const createProviders = async (req, res) => {
 
 //OBJETO PARA PROBAR EL DELETE PROVIDER
 // {
-//     "company_name": "Equipamiento Deportivo S.L"
+//     "company_name": "Piscinas S.L"
 //   }
 
 const deleteProviders = async (req, res) => {
     const { company_name } = req.body
-    const providerExist = await providers.find({ company_name: company_name })
-    const providerEraser = await providers.findOne({ company_name: company_name }).exec()
+    console.log(company_name);
+
+    const providerExist = await provider.find({company_name: company_name })
+    console.log(providerExist)
+    const providerEraser = await provider.findOne({company_name: company_name })
+    console.log(providerEraser)
+    // (    const provider = await providers.findOne({ company_name })
+
+
+    // if (Object.keys(provider).length > 0) {)
 
     if (providerExist[0].company_name === providerEraser.company_name) {
         //EL METODO REMOVE ELIMINA TODOS LOS PRODUCTOS QUE CONTENGAN EL PARAMETRO QUE LE PASAS
-        console.log(providerExist[0]._id)
-        let productsOfCompany = await products.remove({ _id: providerExist[0]._id });
-        let response = await providers.deleteOne(providerEraser);
+        console.log("********",providerExist[0]._id)
+        let productsOfCompany = await products.deleteMany({ provider: providerExist[0]._id });
+        let response = await provider.deleteOne(providerEraser);
         console.log("Este es el console.log de lo que se va a eliminar de la api", response);
         res.status(204).json({
             msj: `Producto ${company_name} eliminado del sistema.`,
@@ -74,10 +82,10 @@ const deleteProviders = async (req, res) => {
 
 //OBJETO PARA PROBAR EL PUT PROVIDERS
 
-// { "company_name": "Equipamiento Deportivo S.L",
-// "CIF": "T4543KFDKK",
-// "address": "Calle actuadsdslizada",
-// "url_web": "https://Eqdsdssuips.com" }
+// { "company_name": "Compañia Vacia",
+// "CIF": "5H5K43",
+// "address": "Poligono industfdsfsdrial La virgencita 725",
+// "url_web": "https://nohaynada.com" }
 
 const updateProviders = async (req, res) => {
 
@@ -85,7 +93,7 @@ const updateProviders = async (req, res) => {
 
 
     try {
-        const providerUpdate = await providers.findOneAndUpdate({ company_name: company_name }, { CIF: CIF, address: address, url_web: url_web })
+        const providerUpdate = await provider.findOneAndUpdate({ company_name: company_name }, { CIF: CIF, address: address, url_web: url_web })
         res.status(201).json({
             msj: `EL provedor ${providerUpdate} ha sido actualizado.`,
         })
