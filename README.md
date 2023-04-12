@@ -1,3 +1,3 @@
-# EJERCICIO---MongoDB-Mongoose---API-REST-con-Express
+# API-REST-con-Express y mongoDB
 
 Api-rest con mongo db
